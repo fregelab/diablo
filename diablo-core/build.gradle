@@ -1,0 +1,109 @@
+apply plugin: 'java'
+apply plugin: "org.frege-lang"
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+//    _____                            _                 _
+//   |  __ \                          | |               (_)
+//   | |  | | ___ _ __   ___ _ __   __| | ___ _ __   ___ _  ___  ___
+//   | |  | |/ _ \ '_ \ / _ \ '_ \ / _` |/ _ \ '_ \ / __| |/ _ \/ __|
+//   | |__| |  __/ |_) |  __/ | | | (_| |  __/ | | | (__| |  __/\__ \
+//   |_____/ \___| .__/ \___|_| |_|\__,_|\___|_| |_|\___|_|\___||___/
+//               | |
+//               |_|
+
+dependencies {
+    compile libraries.frege_core
+    compile libraries.frege_repl
+    compile libraries.frege_nati
+
+    compile libraries.slf4j
+    testCompile libraries.junit
+    testCompile libraries.hamcrest
+}
+
+compileFrege.dependsOn 'compileJava'
+
+//    _____  _     _        _ _           _   _
+//   |  __ \(_)   | |      (_) |         | | (_)
+//   | |  | |_ ___| |_ _ __ _| |__  _   _| |_ _  ___  _ __
+//   | |  | | / __| __| '__| | '_ \| | | | __| |/ _ \| '_ \
+//   | |__| | \__ \ |_| |  | | |_) | |_| | |_| | (_) | | | |
+//   |_____/|_|___/\__|_|  |_|_.__/ \__,_|\__|_|\___/|_| |_|
+//
+//
+
+publishing {
+    publications {
+        mavenCustom(MavenPublication) {
+            groupId    metadata.group
+            artifactId 'diablo-core'
+            version    metadata.version
+
+            from components.java
+        }
+    }
+}
+
+bintray {
+ /* Normally taken from ~/.gradle/gradle.properties */
+    user         = bintrayUser
+    key          = bintrayKey
+    publish      = false
+    publications = ['mavenCustom']
+    pkg {
+        repo            = 'maven'
+        name            = 'diablo-core'
+        desc            =  metadata.desc
+        websiteUrl      = 'http://januslynd.github.io/diablo/'
+        issueTrackerUrl = 'https://github.com/januslynd/diablog/issues'
+        licenses        = ['Apache-2.0']
+        vcsUrl          = 'https://github.com/januslynd/diablo.git'
+        labels          = ['frege', 'template']
+        version {
+            name      = metadata.version
+            desc      = 'Diablo Release'
+            released  = new Date()
+            vcsTag    = metadata.version
+        }
+    }
+}
+
+//    ______                       _
+//   |  ____|                     | |
+//   | |__ _ __ ___  __ _  ___  __| | ___   ___
+//   |  __| '__/ _ \/ _` |/ _ \/ _` |/ _ \ / __|
+//   | |  | | |  __/ (_| |  __/ (_| | (_) | (__
+//   |_|  |_|  \___|\__, |\___|\__,_|\___/ \___|
+//                   __/ |
+//                  |___/
+
+task fregeDocComplete(type: JavaExec, dependsOn: 'fregeDoc') {
+    group       = 'diablo-core'
+    description = 'generates Fregedoc with fregedoc.html file'
+
+    main           = "frege.tools.MakeDocIndex"
+    args           = ["${project.buildDir}/docs" as File]
+    workingDir     = project.projectDir
+    standardInput  = System.in
+    standardOutput = System.out
+    classpath      = sourceSets.main.runtimeClasspath
+
+    doLast {
+        // 1.  Main frame to Diablo.html
+        def docsDir   = "${project.buildDir}/docs" as File
+        def mainFrame = "${docsDir}/fregedoc.html" as File
+        def replaced  = mainFrame.text.replace("frege/Prelude.html","frege/diablo/Diablo.html")
+
+        mainFrame.text = replaced
+
+        // 2. Copy stylesheet and background image
+        new File("${project.projectDir}/src/docs").eachFile { File resource ->
+            java.nio.file.Files.copy(
+                resource.toPath(),
+                new File("$docsDir/${resource.name}").toPath(),
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING
+            )
+        }
+    }
+}
