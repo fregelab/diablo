@@ -17,6 +17,8 @@ dependencies {
     compile libraries.frege_repl
     compile libraries.frege_nati
 
+    compile 'org.codehaus.groovy:groovy-templates:2.4.5'
+
     compile libraries.slf4j
     testCompile libraries.junit
     testCompile libraries.hamcrest

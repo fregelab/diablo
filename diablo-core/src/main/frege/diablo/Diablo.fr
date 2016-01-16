@@ -1,0 +1,27 @@
+module diablo.Diablo where
+
+import frege.java.Util (Map)
+
+data HashMap = native java.util.HashMap where
+    native new :: () -> STMutable s HashMap
+
+data StringReader = mutable native java.io.StringReader where
+    native new :: String -> IO StringReader
+
+data GroovyWritable = mutable native groovy.lang.Writable where
+  native writeTo :: GroovyWritable -> Writer -> IO Writer
+      throws IOException
+
+data GroovyTemplate = mutable native groovy.text.Template where
+  native make :: GroovyTemplate -> MutableIO HashMap -> IO GroovyWritable
+
+data GroovyEngine = mutable native groovy.text.markup.MarkupTemplateEngine where
+  native new            :: () -> IO GroovyEngine
+  native createTemplate :: GroovyEngine -> StringReader -> IO GroovyTemplate
+      throws ClassNotFoundException, IOException
+
+groovy :: String -> IO GroovyTemplate
+groovy tpl = do
+   engine   <- GroovyEngine.new ()
+   reader   <- StringReader.new tpl
+   GroovyEngine.createTemplate engine reader
