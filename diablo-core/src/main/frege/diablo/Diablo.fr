@@ -1,9 +1,17 @@
 module diablo.Diablo where
 
 import frege.java.Util (Map)
+--
+data Writer = mutable native java.io.Writer where
+    native write :: Writer -> Int -> IO () throws IOException
+                 |  Writer -> String -> IO () throws IOException
+                 |  Writer -> String -> Int -> Int -> IO () throws IOException
+    putChar :: Writer -> Char -> IO ()
+    putChar w c = write w (ord c)
+    native toString :: Writer -> IO String
 
-data HashMap = native java.util.HashMap where
-    native new :: () -> STMutable s HashMap
+data HashMap = mutable native java.util.HashMap where
+    native new :: () -> IO HashMap
 
 data StringReader = mutable native java.io.StringReader where
     native new :: String -> IO StringReader
@@ -13,15 +21,20 @@ data GroovyWritable = mutable native groovy.lang.Writable where
       throws IOException
 
 data GroovyTemplate = mutable native groovy.text.Template where
-  native make :: GroovyTemplate -> MutableIO HashMap -> IO GroovyWritable
+  native make :: GroovyTemplate -> HashMap -> IO GroovyWritable
 
 data GroovyEngine = mutable native groovy.text.markup.MarkupTemplateEngine where
-  native new            :: () -> IO GroovyEngine
+  native new            :: ()           -> IO GroovyEngine
   native createTemplate :: GroovyEngine -> StringReader -> IO GroovyTemplate
       throws ClassNotFoundException, IOException
 
-groovy :: String -> IO GroovyTemplate
+groovy :: String -> IO String
 groovy tpl = do
    engine   <- GroovyEngine.new ()
    reader   <- StringReader.new tpl
-   GroovyEngine.createTemplate engine reader
+   template <- GroovyEngine.createTemplate engine reader
+   config   <- HashMap.new ()
+   writable <- GroovyTemplate.make template config
+   stWriter <- StringWriter.new ()
+   writer   <- writable.writeTo stWriter
+   writer.toString
