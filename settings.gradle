@@ -1,3 +1,4 @@
 include 'diablo-core'
+include 'diablo-groovy'
 
 rootProject.name = 'diablo'

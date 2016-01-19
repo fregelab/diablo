@@ -1,0 +1,19 @@
+module diablo.Util where
+
+data Writer = mutable native java.io.Writer where
+    native write :: Writer -> Int -> IO () throws IOException
+                 |  Writer -> String -> IO () throws IOException
+                 |  Writer -> String -> Int -> Int -> IO () throws IOException
+    putChar :: Writer -> Char -> IO ()
+    putChar w c = write w (ord c)
+    native toString :: Writer -> IO String
+
+data StringReader = mutable native java.io.StringReader where
+    native new :: String -> IO StringReader
+    buffered   :: String -> IO BufferedReader
+    buffered text = do --
+        stringReader  <- StringReader.new text
+        BufferedReader.new stringReader
+
+data HashMap = mutable native java.util.HashMap where
+    native new :: () -> IO HashMap

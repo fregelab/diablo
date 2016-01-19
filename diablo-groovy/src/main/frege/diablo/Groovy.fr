@@ -1,0 +1,43 @@
+module diablo.Groovy where --
+
+import diablo.Util (HashMap)
+import diablo.Diablo (Template, TemplateEngine)
+
+data GroovyWritable = mutable native groovy.lang.Writable where
+  native writeTo :: GroovyWritable -> Writer -> IO Writer
+      throws IOException
+
+data GroovyTemplate = mutable native groovy.text.Template where
+  native make :: GroovyTemplate -> HashMap -> IO GroovyWritable
+
+data GroovyEngine = mutable native groovy.text.markup.MarkupTemplateEngine where
+  native new            :: ()           -> IO GroovyEngine
+  native createTemplate :: GroovyEngine -> BufferedReader -> IO GroovyTemplate
+      throws ClassNotFoundException, IOException
+
+instance Template GroovyTemplate where
+   process template model = do
+     config   <- HashMap.new ()
+     writable <- GroovyTemplate.make template config
+     stWriter <- StringWriter.new ()
+     writer   <- writable.writeTo stWriter
+     writer.toString
+
+instance TemplateEngine GroovyEngine where
+  buildTemplate engine reader = GroovyEngine.createTemplate engine reader
+
+--execute :: (TemplateEngine a, Template b) => a -> BufferedReader -> b
+--execute engine reader = buildTemplate engine reader
+
+{--
+groovy :: String -> IO String
+groovy tpl = do
+   engine   <- GroovyEngine.new ()
+   reader   <- BufferedReader.new tpl
+   template <- GroovyEngine.createTemplate engine reader
+   config   <- HashMap.new ()
+   writable <- GroovyTemplate.make template config
+   stWriter <- StringWriter.new ()
+   writer   <- writable.writeTo stWriter
+   writer.toString
+-}

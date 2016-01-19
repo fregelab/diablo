@@ -1,64 +1,11 @@
 module diablo.Diablo where
 
-import frege.java.Util (Map)
-
-data Writer = mutable native java.io.Writer where
-    native write :: Writer -> Int -> IO () throws IOException
-                 |  Writer -> String -> IO () throws IOException
-                 |  Writer -> String -> Int -> Int -> IO () throws IOException
-    putChar :: Writer -> Char -> IO ()
-    putChar w c = write w (ord c)
-    native toString :: Writer -> IO String
-
-data HashMap = mutable native java.util.HashMap where
-    native new :: () -> IO HashMap
+import diablo.Util
 
 type Model = [(String, String)]
 
+class Template a where
+  process :: a -> Model -> IO String
+
 class TemplateEngine a where
-  make :: a -> BufferedReader -> Model -> IO String
-
-execute :: (TemplateEngine a) => a -> BufferedReader -> Model -> IO String
-execute engine reader model = engine.make reader model
-
-data GroovyWritable = mutable native groovy.lang.Writable where
-  native writeTo :: GroovyWritable -> Writer -> IO Writer
-      throws IOException
-
-data GroovyTemplate = mutable native groovy.text.Template where
-  native make :: GroovyTemplate -> HashMap -> IO GroovyWritable
-
-data GroovyEngine = mutable native groovy.text.markup.MarkupTemplateEngine where
-  native new            :: ()           -> IO GroovyEngine
-  native createTemplate :: GroovyEngine -> BufferedReader -> IO GroovyTemplate
-      throws ClassNotFoundException, IOException
-
-instance TemplateEngine GroovyEngine where
-   make :: GroovyEngine -> BufferedReader -> Model -> IO String
-   make engine reader model = do
-     template <- GroovyEngine.createTemplate engine reader
-     m        <- HashMap.new ()
-     writable <- GroovyTemplate.make template m
-     stWriter <- StringWriter.new ()
-     writer   <- writable.writeTo stWriter
-     writer.toString
-
-data StringReader = mutable native java.io.StringReader where
-    native new :: String -> IO StringReader
-    buffered   :: String -> IO BufferedReader
-    buffered text = do --
-        stringReader  <- StringReader.new text
-        BufferedReader.new stringReader
-
-{--
-groovy :: String -> IO String
-groovy tpl = do
-   engine   <- GroovyEngine.new ()
-   reader   <- BufferedReader.new tpl
-   template <- GroovyEngine.createTemplate engine reader
-   config   <- HashMap.new ()
-   writable <- GroovyTemplate.make template config
-   stWriter <- StringWriter.new ()
-   writer   <- writable.writeTo stWriter
-   writer.toString
--}
+  buildTemplate :: (Template b) => a -> BufferedReader -> IO b
