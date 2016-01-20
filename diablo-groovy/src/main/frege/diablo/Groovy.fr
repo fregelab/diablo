@@ -1,7 +1,7 @@
 module diablo.Groovy where --
 
-import diablo.Util (HashMap)
-import diablo.Diablo (Template, TemplateEngine)
+import diablo.Util (HashMap, StringReader)
+import diablo.Diablo (Template, Model)
 
 data GroovyWritable = mutable native groovy.lang.Writable where
   native writeTo :: GroovyWritable -> Writer -> IO Writer
@@ -23,21 +23,14 @@ instance Template GroovyTemplate where
      writer   <- writable.writeTo stWriter
      writer.toString
 
-instance TemplateEngine GroovyEngine where
-  buildTemplate engine reader = GroovyEngine.createTemplate engine reader
 
---execute :: (TemplateEngine a, Template b) => a -> BufferedReader -> b
---execute engine reader = buildTemplate engine reader
+create :: BufferedReader -> IO GroovyTemplate
+create reader = do
+  engine   <- GroovyEngine.new ()
+  GroovyEngine.createTemplate engine reader
 
-{--
-groovy :: String -> IO String
-groovy tpl = do
-   engine   <- GroovyEngine.new ()
-   reader   <- BufferedReader.new tpl
-   template <- GroovyEngine.createTemplate engine reader
-   config   <- HashMap.new ()
-   writable <- GroovyTemplate.make template config
-   stWriter <- StringWriter.new ()
-   writer   <- writable.writeTo stWriter
-   writer.toString
--}
+createFromString :: String -> IO GroovyTemplate
+createFromString tpl = do
+  engine <- GroovyEngine.new ()
+  reader <- StringReader.buffered tpl
+  GroovyEngine.createTemplate engine reader

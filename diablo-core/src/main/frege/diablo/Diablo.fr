@@ -4,8 +4,18 @@ import diablo.Util
 
 type Model = [(String, String)]
 
+{--
+  All template engines' templates should have
+  an instance of Template in order to treat them
+  in an uniform way.
+-}
 class Template a where
   process :: a -> Model -> IO String
 
-class TemplateEngine a where
-  buildTemplate :: (Template b) => a -> BufferedReader -> IO b
+{--
+   Process a given template. Receives the template
+   and data used to populate the template and returns
+   a string with the result.
+-}
+execute :: (Template a) => a -> Model -> IO String
+execute tpl model = tpl.process model
