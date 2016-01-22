@@ -18,7 +18,7 @@ data GroovyEngine = mutable native groovy.text.markup.MarkupTemplateEngine where
 
 instance Template GroovyTemplate where
    process template model = do
-     config   <- HashMap.new ()
+     config   <- HashMap.fromList model
      writable <- GroovyTemplate.make template config
      stWriter <- StringWriter.new ()
      writer   <- writable.writeTo stWriter
@@ -34,12 +34,3 @@ createFromString tpl = do
   engine <- GroovyEngine.new ()
   reader <- StringReader.buffered tpl
   GroovyEngine.createTemplate engine reader
-
-myprocess :: IO GroovyTemplate -> Model -> IO String
-myprocess template model = do
-  tpl      <- template
-  mutable  <- HashMap.fromList model
-  writable <- GroovyTemplate.make tpl mutable
-  stWriter <- StringWriter.new ()
-  writer   <- writable.writeTo stWriter
-  writer.toString
