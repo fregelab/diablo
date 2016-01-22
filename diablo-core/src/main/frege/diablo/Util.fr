@@ -14,6 +14,3 @@ data StringReader = mutable native java.io.StringReader where
     buffered text = do --
         stringReader  <- StringReader.new text
         BufferedReader.new stringReader
-
-data HashMap = mutable native java.util.HashMap where
-    native new :: () -> IO HashMap

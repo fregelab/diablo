@@ -1,19 +1,20 @@
 module diablo.Groovy where --
 
-import diablo.Util (HashMap, StringReader)
+import frege.java.Util (Map, HashMap)
+
+import diablo.Util as DUtil
 import diablo.Diablo (Template, Model)
 
 data GroovyWritable = mutable native groovy.lang.Writable where
-  native writeTo :: GroovyWritable -> Writer -> IO Writer
-      throws IOException
+  native writeTo :: GroovyWritable -> Writer -> IO Writer throws IOException
 
 data GroovyTemplate = mutable native groovy.text.Template where
-  native make :: GroovyTemplate -> HashMap -> IO GroovyWritable
+  native make :: GroovyTemplate -> MutableIO (Map String String) -> IO GroovyWritable
+               | GroovyTemplate -> IO GroovyWritable
 
 data GroovyEngine = mutable native groovy.text.markup.MarkupTemplateEngine where
-  native new            :: ()           -> IO GroovyEngine
-  native createTemplate :: GroovyEngine -> BufferedReader -> IO GroovyTemplate
-      throws ClassNotFoundException, IOException
+  native new            :: ()                     -> IO GroovyEngine
+  native createTemplate :: GroovyEngine -> Reader -> IO GroovyTemplate throws ClassNotFoundException, IOException
 
 instance Template GroovyTemplate where
    process template model = do
@@ -23,8 +24,7 @@ instance Template GroovyTemplate where
      writer   <- writable.writeTo stWriter
      writer.toString
 
-
-create :: BufferedReader -> IO GroovyTemplate
+create :: Reader -> IO GroovyTemplate
 create reader = do
   engine   <- GroovyEngine.new ()
   GroovyEngine.createTemplate engine reader
@@ -34,3 +34,12 @@ createFromString tpl = do
   engine <- GroovyEngine.new ()
   reader <- StringReader.buffered tpl
   GroovyEngine.createTemplate engine reader
+
+myprocess :: IO GroovyTemplate -> Model -> IO String
+myprocess template model = do
+  tpl      <- template
+  mutable  <- HashMap.fromList model
+  writable <- GroovyTemplate.make tpl mutable
+  stWriter <- StringWriter.new ()
+  writer   <- writable.writeTo stWriter
+  writer.toString
