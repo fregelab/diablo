@@ -1,6 +1,7 @@
 module diablo.Groovy where --
 
-import frege.java.Util (Map, HashMap)
+import Java.Util (Map, HashMap)
+import Java.Net (URL, URLArray, URLClassLoader)
 
 import diablo.Util as DUtil
 import diablo.Diablo (Template, Model)
@@ -26,7 +27,7 @@ data GroovyTemplate = mutable native groovy.text.Template where
 data GroovyEngine = mutable native groovy.text.markup.MarkupTemplateEngine where
   native new            :: ()                     -> IO GroovyEngine
   native createTemplate :: GroovyEngine -> Reader -> IO GroovyTemplate throws ClassNotFoundException, IOException
-
+                         | GroovyEngine -> URL    -> IO GroovyTemplate throws ClassNotFoundException, IOException
 {--
     At least all template abstraction should implement `process` in order
     to unify the way they're process producing a result.
@@ -52,3 +53,28 @@ fromString st = do
   engine   <- GroovyEngine.new ()
   reader   <- StringReader.buffered st
   GroovyEngine.createTemplate engine reader
+
+fromPath :: String -> IO GroovyTemplate
+fromPath path = do
+  urls    <- URLArray.fromList []
+  loader  <- ClassLoader.current >>= URLClassLoader.new urls
+  mburl   <- loader.getResource path
+  case mburl of
+    Just    url -> do
+      engine   <- GroovyEngine.new ()
+      GroovyEngine.createTemplate engine url
+    Nothing     -> fail ("template not found")
+
+
+geturl :: String -> IO (Maybe URL)
+geturl path = do
+    urls    <- URLArray.fromList []
+    loader  <- ClassLoader.current >>= URLClassLoader.new urls
+    loader.getResource path
+
+check :: IO (Maybe URL) -> IO String
+check v = do
+  result <- v
+  case result of
+      Just x -> return ":)"
+      Nothing-> return ":("
