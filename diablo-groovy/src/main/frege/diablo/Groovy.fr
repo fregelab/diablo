@@ -5,17 +5,32 @@ import frege.java.Util (Map, HashMap)
 import diablo.Util as DUtil
 import diablo.Diablo (Template, Model)
 
+{--
+    A `GroovyWritable` is a type of object capable of write its content in a
+    `Writer` object.
+-}
 data GroovyWritable = mutable native groovy.lang.Writable where
   native writeTo :: GroovyWritable -> Writer -> IO Writer throws IOException
 
+{--
+    A GroovyTemplate uses a predefined template and some data model and produces
+    a `GroovyWritable`.
+-}
 data GroovyTemplate = mutable native groovy.text.Template where
   native make :: GroovyTemplate -> MutableIO (Map String String) -> IO GroovyWritable
                | GroovyTemplate -> IO GroovyWritable
-
+{--
+    The Groovy `MarkupTemplateEngine` is able to produce templates to
+    build xml documents.
+-}
 data GroovyEngine = mutable native groovy.text.markup.MarkupTemplateEngine where
   native new            :: ()                     -> IO GroovyEngine
   native createTemplate :: GroovyEngine -> Reader -> IO GroovyTemplate throws ClassNotFoundException, IOException
 
+{--
+    At least all template abstraction should implement `process` in order
+    to unify the way they're process producing a result.
+-}
 instance Template GroovyTemplate where
    process template model = do
      config   <- HashMap.fromList model
@@ -24,13 +39,16 @@ instance Template GroovyTemplate where
      writer   <- writable.writeTo stWriter
      writer.toString
 
-create :: Reader -> IO GroovyTemplate
-create reader = do
+--- Returns a GroovyTemplate from a given `Reader`
+fromReader :: IO Reader -> IO GroovyTemplate
+fromReader reader = do
   engine   <- GroovyEngine.new ()
-  GroovyEngine.createTemplate engine reader
+  wrapped  <- GroovyEngine.createTemplate engine <$> reader
+  wrapped
 
-createFromString :: String -> IO GroovyTemplate
-createFromString tpl = do
-  engine <- GroovyEngine.new ()
-  reader <- StringReader.buffered tpl
+-- Returns a GroovyTemplate from a given `String`
+fromString :: String -> IO GroovyTemplate
+fromString st = do
+  engine   <- GroovyEngine.new ()
+  reader   <- StringReader.buffered st
   GroovyEngine.createTemplate engine reader

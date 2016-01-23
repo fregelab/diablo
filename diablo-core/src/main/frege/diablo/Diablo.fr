@@ -1,6 +1,6 @@
 module diablo.Diablo where
 
-import diablo.Util
+import diablo.Util (StringReader)
 
 type Model = [(String, String)]
 
@@ -16,6 +16,9 @@ class Template a where
    Process a given template. Receives the template
    and data used to populate the template and returns
    a string with the result.
+
+   #TODO Result should be an `Either` because template
+   execution may fail.
 -}
 execute :: (Template a) => a -> Model -> IO String
 execute tpl model = tpl.process model
