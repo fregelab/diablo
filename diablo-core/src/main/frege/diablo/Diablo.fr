@@ -4,21 +4,26 @@ import diablo.Util (StringReader)
 
 type Model = [(String, String)]
 
-{--
-  All template engines' templates should have
-  an instance of Template in order to treat them
-  in an uniform way.
--}
-class Template a where
-  process :: a -> Model -> IO String
+class TemplateEngine a where
+  renderFromString :: a -> String -> Model -> IO String
+  renderFromPath   :: a -> String -> Model -> IO String
+  renderFromReader :: a -> Reader -> Model -> IO String
 
 {--
-   Process a given template. Receives the template
-   and data used to populate the template and returns
-   a string with the result.
-
-   #TODO Result should be an `Either` because template
-   execution may fail.
+    Returns the result of a given template provided by a String
 -}
-execute :: (Template a) => a -> Model -> IO String
-execute tpl model = tpl.process model
+fromString :: (TemplateEngine a) => a -> String -> Model -> IO String
+fromString  engine template model = engine.renderFromString template model
+
+{--
+    Returns the result of a given template provided by giving a
+    class path
+-}
+fromPath :: (TemplateEngine a) => a -> String -> Model -> IO String
+fromPath engine template model = engine.renderFromPath template model
+
+{--
+    Returns the result of a given template provided by giving a Reader
+-}
+fromReader :: (TemplateEngine a) => a -> Reader -> Model -> IO String
+fromReader engine template model = engine.renderFromReader template model

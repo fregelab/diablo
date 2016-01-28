@@ -1,5 +1,7 @@
 module diablo.Util where
 
+import Java.Net (URL, URLArray, URLClassLoader)
+
 data Writer = mutable native java.io.Writer where
     native write :: Writer -> Int -> IO () throws IOException
                  |  Writer -> String -> IO () throws IOException
@@ -14,3 +16,16 @@ data StringReader = mutable native java.io.StringReader where
     buffered text = do --
         stringReader  <- StringReader.new text
         BufferedReader.new stringReader
+
+getURL :: String -> IO (Maybe URL)
+getURL path = do
+    urls    <- URLArray.fromList []
+    loader  <- ClassLoader.current >>= URLClassLoader.new urls
+    loader.getResource path
+
+check :: IO (Maybe URL) -> IO String
+check v = do
+  result <- v
+  case result of
+      Just x -> return ":)"
+      Nothing-> return ":("

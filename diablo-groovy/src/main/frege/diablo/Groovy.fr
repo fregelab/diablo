@@ -4,7 +4,7 @@ import Java.Util (Map, HashMap)
 import Java.Net (URL, URLArray, URLClassLoader)
 
 import diablo.Util as DUtil
-import diablo.Diablo (Template, Model)
+import diablo.Diablo (TemplateEngine, Model)
 
 {--
     A `GroovyWritable` is a type of object capable of write its content in a
@@ -21,60 +21,46 @@ data GroovyTemplate = mutable native groovy.text.Template where
   native make :: GroovyTemplate -> MutableIO (Map String String) -> IO GroovyWritable
                | GroovyTemplate -> IO GroovyWritable
 {--
-    The Groovy `MarkupTemplateEngine` is able to produce templates to
-    build xml documents.
+    The Groovy `MarkupTemplateEngine` produces templates for building
+    xml documents.
 -}
 data GroovyEngine = mutable native groovy.text.markup.MarkupTemplateEngine where
   native new            :: ()                     -> IO GroovyEngine
   native createTemplate :: GroovyEngine -> Reader -> IO GroovyTemplate throws ClassNotFoundException, IOException
                          | GroovyEngine -> URL    -> IO GroovyTemplate throws ClassNotFoundException, IOException
 {--
-    At least all template abstraction should implement `process` in order
-    to unify the way they're process producing a result.
+  Groovy implementation of `diablo.Diablo.TemplateEngine`
 -}
-instance Template GroovyTemplate where
-   process template model = do
-     config   <- HashMap.fromList model
-     writable <- GroovyTemplate.make template config
-     stWriter <- StringWriter.new ()
-     writer   <- writable.writeTo stWriter
-     writer.toString
+instance TemplateEngine GroovyEngine where
+  renderFromString :: GroovyEngine -> String -> Model -> IO String
+  renderFromString engine st model = do
+    reader   <- StringReader.buffered st
+    template <- GroovyEngine.createTemplate engine reader
+    render template model
 
---- Returns a GroovyTemplate from a given `Reader`
-fromReader :: IO Reader -> IO GroovyTemplate
-fromReader reader = do
-  engine   <- GroovyEngine.new ()
-  wrapped  <- GroovyEngine.createTemplate engine <$> reader
-  wrapped
+  renderFromReader :: GroovyEngine -> Reader -> Model -> IO String
+  renderFromReader engine reader model = do
+    template <- GroovyEngine.createTemplate engine reader
+    render template model
 
--- Returns a GroovyTemplate from a given `String`
-fromString :: String -> IO GroovyTemplate
-fromString st = do
-  engine   <- GroovyEngine.new ()
-  reader   <- StringReader.buffered st
-  GroovyEngine.createTemplate engine reader
+  renderFromPath :: GroovyEngine -> String -> Model -> IO String
+  renderFromPath engine path model = do
+    mburl    <- DUtil.getURL path
+    template <- case mburl of
+      Just    url -> do
+        engine   <- GroovyEngine.new ()
+        GroovyEngine.createTemplate engine url
+      Nothing     -> fail ("template not found")
+    render template model
 
-fromPath :: String -> IO GroovyTemplate
-fromPath path = do
-  urls    <- URLArray.fromList []
-  loader  <- ClassLoader.current >>= URLClassLoader.new urls
-  mburl   <- loader.getResource path
-  case mburl of
-    Just    url -> do
-      engine   <- GroovyEngine.new ()
-      GroovyEngine.createTemplate engine url
-    Nothing     -> fail ("template not found")
-
-
-geturl :: String -> IO (Maybe URL)
-geturl path = do
-    urls    <- URLArray.fromList []
-    loader  <- ClassLoader.current >>= URLClassLoader.new urls
-    loader.getResource path
-
-check :: IO (Maybe URL) -> IO String
-check v = do
-  result <- v
-  case result of
-      Just x -> return ":)"
-      Nothing-> return ":("
+{--
+  It renders the result of mixin a GroovyTemplate and
+  a set of bindings
+-}
+render :: GroovyTemplate -> Model -> IO String
+render template model = do
+    config   <- HashMap.fromList model
+    writable <- GroovyTemplate.make template config
+    stWriter <- StringWriter.new ()
+    writer   <- writable.writeTo stWriter
+    writer.toString
