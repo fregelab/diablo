@@ -1,0 +1,22 @@
+= Diablo
+:revnumber: 0.1.0
+:numbered:
+:imagesDir: images/
+:baseDir: ../../../../..
+:stem:
+
+:coreBase: {baseDir}/diablo-core
+:sampleBase: {baseDir}/diablo-sample
+
+:coreSrc: {coreBase}/src/main/frege
+:sampleSrc: {sampleBase}/src/main/frege
+
+"Diablo wind is a name that has been occasionally used for the hot,
+dry offshore wind from the northeast that typically occurs in the San
+Francisco Bay Area of Northern California, during the spring and fall"
+-- Wikipedia
+
+**Diablo** is a `Frege` (http://frege-lang.org) library to access
+ different template engines using the same api
+
+include::getting_started.adoc[]

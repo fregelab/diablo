@@ -1,0 +1,12 @@
+== Getting started
+
+[source, haskell]
+----
+import diablo.Diablo (fromString)
+import diablo.Groovy (GroovyEngine)
+
+renderGroovy :: IO String
+renderGrovy = do
+    engine <- GroovyEngine.new ()
+    fromPath "samples/index.gtpl" [("title", "Frege Rocks")]
+----

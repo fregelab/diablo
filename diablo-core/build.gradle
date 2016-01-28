@@ -96,14 +96,5 @@ task fregeDocComplete(type: JavaExec, dependsOn: 'fregeDoc') {
         def replaced  = mainFrame.text.replace("frege/Prelude.html","frege/diablo/Diablo.html")
 
         mainFrame.text = replaced
-
-        // 2. Copy stylesheet and background image
-        new File("${project.projectDir}/src/docs").eachFile { File resource ->
-            java.nio.file.Files.copy(
-                resource.toPath(),
-                new File("$docsDir/${resource.name}").toPath(),
-                java.nio.file.StandardCopyOption.REPLACE_EXISTING
-            )
-        }
     }
 }
