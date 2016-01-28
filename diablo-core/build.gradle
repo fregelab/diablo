@@ -14,10 +14,8 @@ apply plugin: 'com.jfrog.bintray'
 
 dependencies {
     compile libraries.frege_core
-    compile libraries.frege_repl
-    compile libraries.frege_nati
-
-    compile 'org.codehaus.groovy:groovy-templates:2.4.5'
+    runtime libraries.frege_repl
+    runtime libraries.frege_nati
 
     compile libraries.slf4j
     testCompile libraries.junit

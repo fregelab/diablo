@@ -13,7 +13,6 @@ apply plugin: 'com.jfrog.bintray'
 //               |_|
 
 dependencies {
-
     compile project(':diablo-core')
     compile 'org.codehaus.groovy:groovy-templates:2.4.5'
 }
