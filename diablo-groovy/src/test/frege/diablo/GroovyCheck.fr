@@ -1,0 +1,44 @@
+module diablo.GroovyCheck where
+
+import diablo.Diablo (fromString)
+import diablo.Groovy (GroovyEngine)
+
+import Test.QuickCheck
+
+--- An instance of the Groovy template engine
+groovy      = GroovyEngine.new ()
+
+--- A sample of a Groovy template
+sampleGtpl  = "html { " ++
+              "head(title: title) {} " ++
+              "body { h1(message) } " ++
+              "}"
+
+sampleHtml title message = "<html>" ++
+              "<head title='" ++ title ++ "'></head>" ++
+              "<body><h1>" ++ message ++ "</h1></body>" ++
+              "</html>"
+
+--- Generates a word
+wordGen = last <$> sample' generator
+  where generator = arbitrary :: Gen String
+
+--- Generates a model containing a title and a message
+modelGen = do
+  title   <- wordGen
+  message <- wordGen
+  return $ [("title", title),
+            ("message", message)]
+
+{--
+  fromString check
+-}
+fromStringCheck = IO.performUnsafe $ do
+  model    <- modelGen
+  fromTemp <- fromStringSample model
+  title    <- return $ (snd $ head model)
+  message  <- return $ (snd $ last model)
+  fromHtml <- return $ sampleHtml title message
+  return $ property (fromHtml == fromTemp)
+
+fromStringSample model = groovy >>= \g -> fromString g sampleGtpl model
