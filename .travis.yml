@@ -1,0 +1,19 @@
+language: java
+jdk:
+- oraclejdk8
+before_cache:
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+cache:
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+env:
+  global:
+  - secure: IRNnpHOlNPAJ6IJ52eKasW9mGl4XKpt5KOH2BJT9C2mGKyZtu4rGaq/EioxWrBlaKWHRtC2IQ01dtEANTfa5xXAKgKx0E1Tnj3VMpEgMYV1sPqvSrklUi8fNeQ7/2yvnbR3efo9n1ChG029w1f5D12q2QXlU+CfLaGItT6Kdiv1t1/JLcsHt5hBpYIF5bWbqcRLt1DV5RC+lZSagpkn6CjC3kHomghFXxN8SD1B/gzjMKVH85/drtVj0cMa948bJ0lYQHfuEacvUF2d4eyg6GZkQCWKON05osdhU+xtsTJgzlac2Ifla0qcGSH7ff/NJ8zIDK70eCLoNrVAb/EduZNHdaMZ86768ohcCrDS29MauhRIw5WCObXGKUsgqC0/uCIH3gy4xRH/qc64xITpUsOidTqFb1cAwQlItIx6Er8oW02/tivOO74CoLSji6ste6cdJAWftVaPzUejpB5QvJi7BB45Gih67U0K75SGNYJxsVVH2P5mTOUvgJyyIzwk3oUQQHZnVewP7Xu/idaY90whC+l5Q6PNdwTefiEGKlt6tgkGVnRRWYo5m08PY2aF+EqsUEQLD2A2z6MplH1FgODUF9zYnATkpl8L1SrehcV5OYWkurasR9sUV+ITkpyHbC5Uc/nHjxbzAp2BAf1JmFWsCQAUs4vgwGM9MlaJGCa0=
+  - secure: dpCtLgYCzAVQbM0ENtgU6sJzEHEq9IhgaEmRX5qPvFqvGQTVXdcTSam6++YcuFpleNkFQXXdJ1SAY2gerK7SLo4k9vnpgzWbVr2Mpj5MUJTixybk66nYZyQ49J7fp4Jyal2p3FRmA2Co13jNjKp6CJ5oJP3ghP0pvQi1o3izWAT4RWEP+bHUN6zwW1VQMD7gFslcEXxo95E5pbHhtPw/uWQ7amp6fLuJy+B/u4lVvOklWwsfC8t7RvxaACbFE9ONn17mv2RYw9doJ1CaTgp2o711wGpjpFJXDq/SIaeZp7giKnvxMmhuTgBe9vmXJLNWX0O5dV0/XqwZm4D+nsAqTpxUsZeWtKv4f9+NnZ/as+aEgbnjU/luCyxK7vgV632yp4PgBmdZhqWeZ+lsIaxCBZ7R975d67hJhFrR9WMF8EGOHVMxzZ6vogVyIEFDexyXGfPXtpj55yCNsO/kvrltFq42+SUHV0qgTecbLsUf/Bg4bss+ZoqtaZmymtxy3izoDnVLxqgk/jNa74t7nm+vmY6KVqjAWZDBTLftMur7TudmZGHGkf/3l2raRpT0bF8gDjnYWg4jfKHQR7o6WLFokC5Gv8bEEXvvty4Bo6KHZdzZIUz+6sC6tqmvA1FGCjlN34RoX6Wg5/CDyr7fgjD4KabtmLX8Hny/DlT97q2DQpo=
+install: "./gradlew assemble -PbintrayUser=${bintrayUser} -PbintrayKey=${bintrayKey}"
+script: "./gradlew clean build :diablo-core:bintrayUpload :diablo-groovy:bintrayUpload
+  -x fregeQuickCheck -PbintrayUser=${bintrayUser} -PbintrayKey=${bintrayKey}"
+branches:
+  only:
+  - master

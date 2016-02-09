@@ -1,0 +1,3 @@
+== Frege docs
+
+You can check out Frege docs link:fregedoc/fregedoc.html[here]
