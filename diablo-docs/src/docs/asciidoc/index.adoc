@@ -20,3 +20,5 @@ Francisco Bay Area of Northern California, during the spring and fall"
  different template engines using the same api
 
 include::getting_started.adoc[]
+
+include::development.adoc[]
