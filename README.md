@@ -1,6 +1,6 @@
 **Diablo** tries to abstract different template engines to be used
 in [Frege](http://frege-lang.org) projects. Diablo docs are available
-at https://januslynd.github.io/diablo
+at https://fregelab.github.io/diablo
 
 Binaries are available at Bintray:
 
