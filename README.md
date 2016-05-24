@@ -6,7 +6,7 @@ Binaries are available at Bintray:
 
     repositories {
         maven {
-            url  "http://dl.bintray.com/januslynd/maven"
+            url  "http://dl.bintray.com/fregelab/maven"
         }
     }
 
@@ -16,4 +16,4 @@ At the moment **Diablo** is only integrated with
 [Groovy](http://docs.groovy-lang.org/latest/html/documentation/template-engines.html#_the_markuptemplateengine)
 templates.
 
-    compile 'com.github.januslynd:diablo-groovy:0.1.0'
+    compile 'com.github.fregelab:diablo-groovy:0.1.1'
