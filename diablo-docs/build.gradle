@@ -5,10 +5,12 @@ buildscript {
 
     dependencies {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
+        classpath 'org.ajoberstar:gradle-git:1.4.2'
     }
 }
 
 apply plugin: 'org.asciidoctor.convert'
+apply plugin: 'org.ajoberstar.github-pages'
 
 asciidoctor {
     attributes 'source-highlighter': 'prettify',
@@ -22,6 +24,17 @@ asciidoctor {
                'target-jdk'        : libraries.jdk
 }
 
+githubPages {
+    repoUri = 'https://github.com/fregelab/diablo.git'
+    deleteExistingFiles = true
 
+    pages {
+        from file('build/asciidoc/html5')
+    }
 
+    //https://github.com/ajoberstar/gradle-git/wiki/Travis-CI-Authentication
+    credentials {
+        username = System.getenv('GH_TOKEN')
+        password = ''
+    }
 }
