@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.2">
-<title>Diablo</title>
+<title>Frege docs</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -412,73 +412,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
 <script>document.addEventListener('DOMContentLoaded', prettyPrint)</script>
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [["\\(", "\\)"]],
-    displayMath: [["\\[", "\\]"]],
-    ignoreClass: "nostem|nolatexmath"
-  },
-  asciimath2jax: {
-    delimiters: [["\\$", "\\$"]],
-    ignoreClass: "nostem|noasciimath"
-  },
-  TeX: { equationNumbers: { autoNumber: "none" } }
-});
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.4.0/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Diablo</h1>
-<div class="details">
-<span id="revnumber">version 0.1.0</span>
-</div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_getting_started">1. Getting started</a></li>
-<li><a href="#_frege_docs">2. Frege docs</a></li>
+<li><a href="#_frege_docs">Frege docs</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
-<div class="sectionbody">
-<div class="quoteblock">
-<blockquote>
-Diablo wind is a name that has been occasionally used for the hot,
-dry offshore wind from the northeast that typically occurs in the San
-Francisco Bay Area of Northern California, during the spring and fall
-</blockquote>
-<div class="attribution">
-&#8212; Wikipedia
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Diablo</strong> is a <code>Frege</code> (<a href="http://frege-lang.org" class="bare">http://frege-lang.org</a>) library to access
- different template engines using the same api</p>
-</div>
-</div>
-</div>
 <div class="sect1">
-<h2 id="_getting_started">1. Getting started</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-haskell" data-lang="haskell">import diablo.Diablo (fromString)
-import diablo.Groovy (GroovyEngine)
-
-renderGroovy :: IO String
-renderGrovy = do
-    engine &lt;- GroovyEngine.new ()
-    fromPath "samples/index.gtpl" [("title", "Frege Rocks")]</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_frege_docs">2. Frege docs</h2>
+<h2 id="_frege_docs">Frege docs</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>You can check out Frege docs <a href="fregedoc/fregedoc.html">here</a></p>
@@ -488,8 +434,7 @@ renderGrovy = do
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.1.0<br>
-Last updated 2016-02-09 15:11:43 +01:00
+Last updated 2016-05-24 17:43:06 UTC
 </div>
 </div>
 </body>
