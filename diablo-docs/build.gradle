@@ -15,7 +15,11 @@ asciidoctor {
                toc                 : 'left',
                icons               : 'font',
                toclevels           : 3,
-               'pdf-style'         : 'default'
+               'pdf-style'         : 'default',
+               'diablo-version'    : metadata.version,
+               'frege-core'        : libraries.frege_core,
+               'frege-repl'        : libraries.frege_repl,
+               'target-jdk'        : libraries.jdk
 }
 
 

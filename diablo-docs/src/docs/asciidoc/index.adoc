@@ -1,5 +1,5 @@
 = Diablo
-:revnumber: 0.1.0
+:revnumber: {diablo-version}
 :numbered:
 :imagesDir: images/
 :baseDir: ../../../../..
@@ -19,6 +19,6 @@ Francisco Bay Area of Northern California, during the spring and fall"
 **Diablo** is a `Frege` (http://frege-lang.org) library to access
  different template engines using the same api
 
-include::getting_started.adoc[]
+include::versions.adoc[]
 
-include::development.adoc[]
+include::getting_started.adoc[]
