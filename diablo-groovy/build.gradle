@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: "org.frege-lang"
+apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
@@ -49,11 +50,12 @@ bintray {
     pkg {
         repo            = 'maven'
         name            = 'diablo-groovy'
+        userOrg         = 'fregelab'
         desc            =  metadata.desc
-        websiteUrl      = 'http://januslynd.github.io/diablo/'
-        issueTrackerUrl = 'https://github.com/januslynd/diablog/issues'
+        websiteUrl      = 'http://fregelab.github.io/diablo/'
+        issueTrackerUrl = 'https://github.com/fregelab/diablog/issues'
         licenses        = ['Apache-2.0']
-        vcsUrl          = 'https://github.com/januslynd/diablo.git'
+        vcsUrl          = 'https://github.com/fregelab/diablo.git'
         labels          = ['frege', 'template']
         version {
             name      = metadata.version
