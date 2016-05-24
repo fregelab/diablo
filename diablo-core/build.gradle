@@ -15,14 +15,7 @@ apply plugin: 'com.jfrog.bintray'
 dependencies {
     compile libraries.frege_core
     runtime libraries.frege_repl
-    runtime libraries.frege_nati
-
-    compile libraries.slf4j
-    testCompile libraries.junit
-    testCompile libraries.hamcrest
 }
-
-compileFrege.dependsOn 'compileJava'
 
 //    _____  _     _        _ _           _   _
 //   |  __ \(_)   | |      (_) |         | | (_)
@@ -66,35 +59,5 @@ bintray {
             released  = new Date()
             vcsTag    = metadata.version
         }
-    }
-}
-
-//    ______                       _
-//   |  ____|                     | |
-//   | |__ _ __ ___  __ _  ___  __| | ___   ___
-//   |  __| '__/ _ \/ _` |/ _ \/ _` |/ _ \ / __|
-//   | |  | | |  __/ (_| |  __/ (_| | (_) | (__
-//   |_|  |_|  \___|\__, |\___|\__,_|\___/ \___|
-//                   __/ |
-//                  |___/
-
-task fregeDocComplete(type: JavaExec, dependsOn: 'fregeDoc') {
-    group       = 'diablo-core'
-    description = 'generates Fregedoc with fregedoc.html file'
-
-    main           = "frege.tools.MakeDocIndex"
-    args           = ["${project.buildDir}/docs" as File]
-    workingDir     = project.projectDir
-    standardInput  = System.in
-    standardOutput = System.out
-    classpath      = sourceSets.main.runtimeClasspath
-
-    doLast {
-        // 1.  Main frame to Diablo.html
-        def docsDir   = "${project.buildDir}/docs" as File
-        def mainFrame = "${docsDir}/fregedoc.html" as File
-        def replaced  = mainFrame.text.replace("frege/Prelude.html","frege/diablo/Diablo.html")
-
-        mainFrame.text = replaced
     }
 }

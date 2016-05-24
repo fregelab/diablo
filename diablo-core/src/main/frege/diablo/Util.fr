@@ -19,9 +19,9 @@ data StringReader = mutable native java.io.StringReader where
 
 getURL :: String -> IO (Maybe URL)
 getURL path = do
-    urls    <- URLArray.fromList []
-    loader  <- ClassLoader.current >>= URLClassLoader.new urls
-    loader.getResource path
+  urls   <- URLArray.genericFromList []
+  loader <- ClassLoader.current >>= URLClassLoader.new urls
+  loader.getResource path
 
 check :: IO (Maybe URL) -> IO String
 check v = do
