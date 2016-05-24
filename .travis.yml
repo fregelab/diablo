@@ -14,7 +14,7 @@ env:
   - secure: ijDsVFEiXjlT4QB4TeOIMeV3JSWqfXdmI85uc/fXOToax8ose1u4QBBHMSuJrZ4M19SlD/55i/WQrk2kq0T5BXbTwsMJNBlwxnl3w1ks5Gb9k1oObQvRryynTQK3N+FhZVZMjWG0pHPQVIAjAfWkz/pMfsWrVQTAU07qpIQxOASJJCywXjboJwV8QyuYJm6kT9vvPUo9O8UIDhUUPi6t4aZDmEky6VYtyq3NJdblSXoxgwXy+5htK1Vg6dScfT7N8fEbEfmfeX7aAqpIa/xvNU565olOybmwY7XA3UGj1SqVBCdAbn2VENncVZVwCK5pDy0qR2ihIg1P93f7PhQgrI7fMIcRrMQLSBM6SfuAaRKzFAuSX55BLz3caowUCEj4oruBuFTSXmfql9s5NT+6vwKbSwMN2gQ8NnpSfjWvtwuDdxIcBSzaPAmok/GJ8uMSiRULNRh0RaAmQhXB3ZhgilXooXKf6wVzJAlCuisR3pl/B8SrI6jl8X4L3tjn6OKOaUuIlPaOLp58A8tBLrD+8xQyVhYw5AFiWwjKrEf9rB2YbEZqdcuaqRKDjtuaXC77vy/pCkWHnVbOzqyFn1pIKQRL3czKyBcxE+a3PKcC1qAAcgiWC5K1jd1u59/AZYZVMV9zMWMIuUMiYMFsxZczA3JcFRFXhKl28EqS69XOcoI=
 install: "./gradlew assemble -PbintrayUser=${bintrayUser} -PbintrayKey=${bintrayKey}"
 script: "./gradlew clean build :diablo-core:bintrayUpload :diablo-groovy:bintrayUpload
-  :diablo-docs:publishGhPages -x fregeQuickCheck -PbintrayUser=${bintrayUser} -PbintrayKey=${bintrayKey}"
+  :diablo-docs:ascii :diablo-docs:publishGhPages -x fregeQuickCheck -PbintrayUser=${bintrayUser} -PbintrayKey=${bintrayKey}"
 branches:
   only:
   - master
