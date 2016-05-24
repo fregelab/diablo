@@ -43,7 +43,7 @@ subprojects {
 
 ext.metadata = [
     group   : "com.github.fregelab",
-    version : "0.1.1",
+    version : "0.1.2",
     desc: 'Diablo is a Frege abstraction to support different JVM template engines'
 ]
 

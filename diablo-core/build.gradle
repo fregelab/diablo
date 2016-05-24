@@ -51,7 +51,7 @@ bintray {
         userOrg         = 'fregelab'
         desc            =  metadata.desc
         websiteUrl      = 'http://fregelab.github.io/diablo/'
-        issueTrackerUrl = 'https://github.com/fregelab/diablog/issues'
+        issueTrackerUrl = 'https://github.com/fregelab/diablo/issues'
         licenses        = ['Apache-2.0']
         vcsUrl          = 'https://github.com/fregelab/diablo.git'
         labels          = ['frege', 'template']
